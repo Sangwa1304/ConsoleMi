@@ -1,6 +1,6 @@
 using ConsoleMi;
 
-namespace ConsoleMi.Informations;
+namespace ConsoleMi.ConsoleMiCorps;
 
 public static class FileMi
 {
@@ -14,7 +14,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return [];
         }
     }
@@ -26,12 +26,12 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return [];
         }
 
     }
-    
+
     private static string[] DirsNames(string source)
     {
         return ElementVide([.. from string dir in Dirs(source)
@@ -43,24 +43,24 @@ public static class FileMi
         return ElementVide([.. from string dir in Files(source)
                     select Path.GetFileNameWithoutExtension(dir)]);
     }
-    private static string[] FilesDirs(string source)
+    public static string[] FilesDirs(string source)
     {
         // cette methode se charge de retourner les path des fichiers et dossiers dans la source.
-        return AddPath(Dirs(source),Files(source));
+        return AddPath(Dirs(source), Files(source));
     }
     public static string[] FilesDirsNames(string source)
     {
         return ElementVide([..from string path in FilesDirs(source)
                     select Path.GetFileName(path)]);
     }
-    private static string[] AddPath(string[] pathsA,string[] pathsB)
+    private static string[] AddPath(string[] pathsA, string[] pathsB)
     {
-        List<string> Paths = [..pathsA];
-        foreach(string path in pathsB)
+        List<string> Paths = [.. pathsA];
+        foreach (string path in pathsB)
         {
             Paths.Add(path);
         }
-        return [..Paths];
+        return [.. Paths];
     }
     private static string[] ElementVide(string[] paths)
     {
@@ -107,7 +107,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -121,7 +121,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -134,7 +134,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -147,7 +147,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -160,7 +160,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -173,7 +173,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -186,7 +186,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -194,13 +194,12 @@ public static class FileMi
     {
         try
         {
-            string destination = Path.Combine(Path.GetDirectoryName(source) ?? "", newName);
-            File.Move(source, destination);
+            File.Move(source, newName);
             return true;
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -214,7 +213,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -226,7 +225,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return "";
         }
     }
@@ -246,7 +245,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -263,7 +262,7 @@ public static class FileMi
         }
         catch (Exception e)
         {
-            GestionnaireException.Add(e);
+            ProgramMi.Exceptions.Add(e);
             return false;
         }
     }
@@ -271,32 +270,38 @@ public static class FileMi
 
 public class PathInfo
 {
-    public string Path { get; set; }
-    public bool IsDirectory { get; set; }
-    public bool IsFile { get; set; }
-    public long SizeInBytes { get; set; }
-    public DateTime CreationTime { get; set; }
-    public DateTime LastAccessTime { get; set; }
-    public DateTime LastWriteTime { get; set; }
+    public string PathString { get; set; }
+    public string Name { get; private set; }
+    private bool IsDirectory { get; }
+    private bool IsFile { get; }
+    public long SizeInBytes { get; private set; }
+    public DateTime CreationTime { get; private set; }
+    public DateTime LastAccessTime { get; private set; }
+    public DateTime LastWriteTime { get; private set; }
+    public string Type { get; }
 
     public PathInfo(string path)
     {
-        Path = path;
+        PathString = path;
         IsDirectory = Directory.Exists(path);
         IsFile = File.Exists(path);
 
         if (IsFile)
         {
+            Type = "IsFile";
             FileInfo fi = new FileInfo(path);
             SizeInBytes = fi.Length;
+            Name = fi.Name;
             CreationTime = fi.CreationTime;
             LastAccessTime = fi.LastAccessTime;
             LastWriteTime = fi.LastWriteTime;
         }
         else if (IsDirectory)
         {
+            Type = "IsDirectory";
             DirectoryInfo di = new DirectoryInfo(path);
             SizeInBytes = 0; // Directories do not have a size in the same way files do
+            Name = di.Name;
             CreationTime = di.CreationTime;
             LastAccessTime = di.LastAccessTime;
             LastWriteTime = di.LastWriteTime;
@@ -309,5 +314,10 @@ public class PathInfo
     public static PathInfo GetPathInfo(string path)
     {
         return new PathInfo(path);
+    }
+    public static string[] GetPathInfoString(string path)
+    {
+        PathInfo info = new(path);
+        return [$"Type     :  {info.Type} ", $"Name     :  {info.Name}", $"Size     :  {info.SizeInBytes} ", $"Creation     :  {info.CreationTime} ", $"LastWrite     :  {info.LastWriteTime} ", $"LastAcess     :  {info.LastAccessTime} "];
     }
 }

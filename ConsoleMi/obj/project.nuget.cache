@@ -1,10 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "Od/CR9OfEAE=",
+  "dgSpecHash": "fLL6CUfwPNI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Glory San\\Documents\\VS_Code\\code Csharp\\AppConsole\\ConsoleMi\\ConsoleMi\\ConsoleMi.csproj",
+  "projectFilePath": "C:\\Users\\Glory San\\Documents\\VS_Code\\code Csharp\\Net CyberService\\AppConsole\\ConsoleMi\\ConsoleMi\\ConsoleMi.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Glory San\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
     "C:\\Users\\Glory San\\.nuget\\packages\\system.speech\\10.0.2\\system.speech.10.0.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Une erreur s’est produite lors de l’obtention des données de vulnérabilité du package\u00A0: Impossible de charger l'index de service pour la source https://api.nuget.org/v3/index.json.",
+      "projectPath": "C:\\Users\\Glory San\\Documents\\VS_Code\\code Csharp\\Net CyberService\\AppConsole\\ConsoleMi\\ConsoleMi\\ConsoleMi.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\Glory San\\Documents\\VS_Code\\code Csharp\\Net CyberService\\AppConsole\\ConsoleMi\\ConsoleMi\\ConsoleMi.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

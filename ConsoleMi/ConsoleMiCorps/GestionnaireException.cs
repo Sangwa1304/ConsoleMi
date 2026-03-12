@@ -1,13 +1,19 @@
-namespace ConsoleMi.Informations;
+using System.ComponentModel;
+
+namespace ConsoleMi.ConsoleMiCorps;
 
 // Type Exceptions
 
 public struct EnregistreException(Exception exception)
 {
-    public Exception Exceptions { get; } = exception;
+    public Exception Exception { get; } = exception;
     public DateTime DateTimes { get; } = DateTime.Now;
 }
-
+public struct EnregistreWarning(WarningException warning)
+{
+    public WarningException Warning { get; } = warning;
+    public DateTime DateTimes { get; } = DateTime.Now;
+}
 
 internal class ExceptionsGeree
 {
@@ -21,7 +27,7 @@ internal class ExceptionsGeree
     {
         foreach (var except in Exceptions)
         {
-            Console.WriteLine(except.Exceptions.HResult + " : " + except.Exceptions.Message);
+            Console.WriteLine(except.Exception.HResult + " : " + except.Exception.Message);
             Console.WriteLine("At time : " + except.DateTimes);
             
         }
@@ -29,14 +35,17 @@ internal class ExceptionsGeree
     }
 }
 
-public static class GestionnaireException
+public class GestionnaireException
 {
-    private static ExceptionsGeree Excepts = new();
-    public static void Add(Exception e)
+    public delegate void VoidFunc(Exception e);
+    public event VoidFunc? InformLogging;
+    private ExceptionsGeree Excepts = new();
+    public  void Add(Exception e)
     {
         Excepts.Add(e);
+        InformLogging?.Invoke(e);
     }
-    public static void ViewException(bool remove = false)
+    public  void ViewException(bool remove = false)
     {
         Excepts.ViewException();
     }

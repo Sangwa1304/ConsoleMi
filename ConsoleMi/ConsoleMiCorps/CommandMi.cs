@@ -1,10 +1,11 @@
-﻿namespace ConsoleMi.Informations;
+﻿namespace ConsoleMi.ConsoleMiCorps;
 
 static class CommandeMi
 {
     public static List<Command> commands = new();
     public static void NormalizeEcriture(string[] textes, string? source = null)
     {
+
         if (source != null)
             Console.WriteLine(Ecrit("-", (60 - source.Length) / 2) + source + Ecrit("-", (60 - source.Length) / 2));
         Console.WriteLine(Ecrit("*", 60));
@@ -25,9 +26,41 @@ static class CommandeMi
         }
         return t;
     }
-    public static void SetFolder(string path)
+    public static void CommandSet(string text)
     {
-        Info.Mi.SetFolder(UserFolder(path));
+        string arg = text;
+        if(arg.Trim().StartsWith("user "))
+        {
+            arg = UserFolder(ProgramMi.Parsing(arg.Trim(),"user "));
+        }
+        if (Path.Exists(arg) || Path.Exists(ProgramMi.ParserCombine(arg)))
+        {
+            if(Path.Exists(ProgramMi.ParserCombine(arg)))
+            {
+                arg = ProgramMi.ParserCombine(arg);
+            }
+            
+            if (PathInfo.GetPathInfo(arg).Type == "IsDirectory")
+            {
+                ProgramMi.SetFolder(arg);
+
+            }
+            else if (PathInfo.GetPathInfo(arg).Type == "IsFile")
+            {
+                if (FileMi.LaunchFile(arg))
+                    ProgramMi.WriteInfoLine($"demarrage de {PathInfo.GetPathInfo(arg).Name}");
+            }
+            else
+            {
+                ProgramMi.WriteErrorLine("le fichier n'est pas compatible");
+                ProgramMi.log.WriteWarning("le fichier n'est pas compatible.","get "+text);
+            }
+        }
+        else
+        {
+            ProgramMi.log.WriteWarning("le fichier specifier n'existe pas.","get "+text);
+            ProgramMi.WriteWarningLine("le fichier specifier n'existe pas.");
+        }
     }
     public static string UserFolder(string path)
     {
@@ -95,6 +128,22 @@ static class CommandeMi
                 break;
         }
         return pathName;
+    }
+
+    internal static bool PathAtArray(string arg,out string file)
+    {
+        
+        string[] files = FileMi.FilesDirs(ProgramMi.Folder);
+        foreach(string fil in files)
+        {
+            if(Path.GetFileName(fil) == arg)
+            {
+                file = fil;
+                return true;
+            }
+        }
+        file = arg;
+        return false;
     }
 }
 
