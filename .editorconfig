@@ -1,0 +1,4 @@
+[*.cs]
+
+# CS9266: L’accesseur de propriété doit utiliser 'field', car l’autre accesseur l’utilise.
+dotnet_diagnostic.CS9266.severity = warning
